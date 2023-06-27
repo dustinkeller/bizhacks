@@ -1,14 +1,13 @@
-# base image  
-FROM python:3.8   
+FROM python:3.10-slim
 
-ENV PYTHONBUFFERED=1
+# set the working directory
+WORKDIR /code
 
-WORKDIR /django
+# install dependencies
+COPY ./requirements.txt ./
+RUN pip install --no-cache-dir --upgrade -r requirements.txt
 
-COPY requirements.txt requirements.txt 
+COPY . ./code
 
-RUN pip3 install -r requirements.txt
-
-COPY . .
-
-CMD python manage.py runserver 0.0.0.0:8000
+#run the bot
+CMD ["python3", "bot.py"]

@@ -1,13 +1,11 @@
-version: "0.1.0"
+version: "1.7"
 services:
- app: 
-  build: .
-  volumes:
-   - .:/django
-  ports:
-   - 8000:8000
-  env_file:
-   - .env
-  image: app:django
-  container_name: ${CONTAINER_NAME}
-  command: python manage.py runserver 0.0.0.0:8000
+  app:
+    build: .
+    container_name: ${CONTAINER_NAME}
+    hostname: "pochbot"
+    volumes:
+      - .:/code
+    env_file:
+      - .env
+    restart: 'always'
