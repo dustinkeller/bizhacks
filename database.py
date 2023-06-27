@@ -14,14 +14,13 @@ class  bizzHackBot_db():
             CREATE TABLE IF NOT EXISTS questions (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_name TEXT NOT NULL,
-                date TEXT NOT NULL,
-                question TEXT NOT NULL
+                date TEXT NOT NULL
             )
         ''')
         con.commit()
         con.close()
 
-    def create_question_table():
+    def create_question_answer_table():
         """
         creates table if it doesnt exist
         """
@@ -33,7 +32,8 @@ class  bizzHackBot_db():
                 user_name TEXT NOT NULL,
                 date TEXT NOT NULL,
                 question TEXT NOT NULL,
-                answer TEXT NOT NULL
+                answer TEXT NOT NULL,
+                points INTEGER,
                 FOREIGN KEY(user_name) REFERENCES questions(user_name)
             )
         ''')
@@ -64,3 +64,14 @@ class  bizzHackBot_db():
         con.commit()
         con.close()
 
+    def individual_score(user):
+        con = sqlite3.connect('bizzHack.db')
+        df = pd.read_sql_query(f"select user_name, date, points from questions_answers where user_name = '{user}", con)
+        con.close()
+        return df
+    
+    def total_scores():
+        con = sqlite3.connect('bizzHack.db')
+        df = pd.read_sql_query(f"select user_name, date, count(points) as TotalScore from questions_answers group by user_name", con)
+        con.close()
+        return df
