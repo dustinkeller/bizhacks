@@ -1,5 +1,8 @@
 import openai
 from langchain.llms import OpenAI
+import os
+
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 class Question:
     #Receive a problem from the LLM
