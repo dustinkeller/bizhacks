@@ -1,16 +1,16 @@
 import matplotlib.pyplot as plt
+
 import io
-from database import bizzHackBot_db as bhb_db
+from database import bizzHackBot_db as bh_db
 import pandas as pd
 
 class bizzHackGraph:
 
     def stats(user):
         #get data
-        df = bhb_db.individual_score(user)
+        df = bh_db.individual_score(user)
 
         #set up the data
-        counts = df['date'].value_counts().sort_index(ascending=True)
         df['date'] = pd.to_datetime(df['date'])
         sum_by_date = df[df['points'] == 1.0].groupby('date')['points'].sum()
 
@@ -29,8 +29,8 @@ class bizzHackGraph:
         num_ticks = 3  # Set the desired number of ticks
         x_values = sum_by_date.index
         x_ticks = pd.date_range(start=x_values.min(), end=x_values.max(), periods=num_ticks).tolist()
-        plt.xticks(x_ticks, x_ticks)
-
+        x_tick_labels = [tick.strftime('%Y-%m-%d') for tick in x_ticks]
+        plt.xticks(x_ticks, x_tick_labels)
 
         plt.savefig('graph.png', transparent=True)
         plt.close(fig)
