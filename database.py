@@ -40,37 +40,43 @@ class  bizzHackBot_db():
         con.commit()
         con.close()
 
-    def insert_question(user, question):
+    def insert_question(user):
         """
-        inserts who ran the site, date, time, and payout into pochBotdb
+        inserts user and registration date
         """
         con = sqlite3.connect('bizzHack.db')
         cur = con.cursor()
         today = date.today()
         current_date = today.strftime("%Y-%m-%d")
-        cur.execute("INSERT INTO questions (user_name, date, question) VALUES (?, ?, ?)", (user,current_date,question))
+        cur.execute("INSERT INTO questions (user_name, date) VALUES (?, ?)", (user,current_date))
         con.commit()
         con.close()
     
-    def insert_question_answer(user, question, answer):
+    def insert_question_answer(user, question, answer, points):
         """
-        inserts who ran the site, date, time, and payout into pochBotdb
+        inserts who answered the question, date, and answer into buzzhack db
         """
         con = sqlite3.connect('bizzHack.db')
         cur = con.cursor()
         today = date.today()
         current_date = today.strftime("%Y-%m-%d")
-        cur.execute("INSERT INTO questions_answers (user_name, date, question, answer) VALUES (?, ?, ?, ?)", (user,current_date,question, answer))
+        cur.execute("INSERT INTO questions_answers (user_name, date, question, answer, points) VALUES (?, ?, ?, ?, ?)", (user,current_date,question, answer, points))
         con.commit()
         con.close()
 
     def individual_score(user):
+        """
+        select the user and the number of points they have from the db
+        """
         con = sqlite3.connect('bizzHack.db')
-        df = pd.read_sql_query(f"select user_name, date, points from questions_answers where user_name = '{user}", con)
+        df = pd.read_sql_query(f"select user_name, date, points from questions_answers where user_name = '{user}'", con)
         con.close()
         return df
     
     def total_scores():
+        """
+        selects all users and their total score
+        """
         con = sqlite3.connect('bizzHack.db')
         df = pd.read_sql_query(f"select user_name, date, count(points) as TotalScore from questions_answers group by user_name", con)
         con.close()
